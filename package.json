@@ -1,0 +1,14 @@
+{
+  "name": "funnelope.fisher",
+  "version": "0.0.0",
+  "description": "funnelope.fisher",
+  "main": "app.js",
+  "author": {
+    "name": "Namdascious",
+    "email": "nonubogu@gmail.com"
+  },
+  "dependencies": {
+    "fireproof": "^3.0.3",
+    "underscore": "^1.8.3"
+  }
+}
