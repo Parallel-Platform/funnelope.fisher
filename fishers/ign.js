@@ -26,6 +26,11 @@ var rp = require('request-promise');
 var _ = require('underscore');
 var parseXML = require('xml2js').parseString;
 
+var gamesStore = require('../games.json');
+gamesStore.games = gamesStore.games == null || gamesStore.games == undefined ? [] : gamesStore.games;
+
+var si = require('search-index')({ indexPath: 'gamesindex'});
+
 var funneldata = require('../funneldata');
 var giantbomb = require('../giantbomb');
 var gameDB = require('../thegamedb');
@@ -36,9 +41,8 @@ var categorizeContent = function (contentList) {
     //This is the tricky part lulz ( ._.)
     
     if (contentList && contentList.length > 0) {
-
+        
         var NGrams = natural.NGrams;
-       
         _.each(contentList, function (content) {
             //We are going to use nGrams and try and break up the "title" of the content into various permutations of word combinations
             //(using Triangle number sequencing) we will then cross reference each combination against some store containing game data, 
@@ -46,12 +50,12 @@ var categorizeContent = function (contentList) {
             //processing.This could be CPU intensive, but it won't be a lot of processing since article titles are typically not long.
             //You can calculate the number of combinations in a title using the formula (n(n + 1)) / 2 where 'n' is the number of words in
             //a game title/sentence.
-            var latinizedTitle = latinizer.latinize(content.title);
+            var latinizedTitle = latinizer.latinize(removeSpecialChars(content.title));
             var words = new pos.Lexer().lex(latinizedTitle);
             var tagger = new pos.Tagger();
             var taggedWordsAndPOS = tagger.tag(words);
             var taggedWords = [];
-
+            
             //Get just the tagged words - remove the POS
             _.each(taggedWordsAndPOS, function (taggedWordArray) {
                 taggedWords.push(taggedWordArray[0]);
@@ -65,12 +69,12 @@ var categorizeContent = function (contentList) {
             
             var permutationLimit = taggedWords !== null && taggedWords !== undefined ? taggedWords.length : 0;
             var combinedWordSets = [];
-
+            
             for (i = 1; i <= permutationLimit; i++) {
                 //take the nGram using the current position of the loop. We'll take every possible permutation up to the total count of words
                 //in the title
                 var wordCombinationArrays = NGrams.ngrams(latinizedTitle, i); //output is an array of arrays
-
+                
                 //Now process the array of arrays, combining the array items into words and cross checking them against our games API services
                 if (wordCombinationArrays) {
                     _.each(wordCombinationArrays, function (array) {
@@ -78,80 +82,190 @@ var categorizeContent = function (contentList) {
                         _.each(array, function (word) {
                             combinedWord += word + ' ';
                         });
-                        combinedWordSets.push(combinedWord)
+                        combinedWordSets.push(combinedWord.trim());
                     });
                 }
             }
-
+            
             /* Now process the sets of words - cross reference against game db stores in this order
-             * (A) - Check funnelope known titles Firebase DB
-             * (B) - Check theGameDB.net store
-             * (C) - Check giantbomb API
-             * */
-            var titleMatches = [];
-            var gamesDBMatches = [];
+            * (A) - Check local games.json
+            * (C) - Check giantbomb API - super duper last resort so we dont get banned :|
+            * */
 
             _.each(combinedWordSets, function (wordSet) {
-                var contentValue = content;
-
-                //(A) - Check our firebase gameTags DB
-                var isMatch = false;
-                var gameTagNameRefs = new Firebase(config.firebase.url + config.firebase.endpoints.gametags);
-                var gameTagNameProof = new Fireproof(gameTagNameRefs);
-
-                gameTagNameProof
-                    .orderByChild('tag')
-                    .equalTo(wordSet)
-                    .once('value')
-                    .then(function (snapshot) {
-                        var result = snapshot.val();
-                        if (result) {
-                            isMatch = true;
-                            titleMatches.push({
-                                'query' : wordSet,
-                                'tag' : result.tag,
-                                'gametitle' : result.gametitle
-                            });
-                        }
-                    });
                 
-                if (!isMatch) {
-                    //(B) - Check theGameDB.net store
-                    var queueArray = [];
+                //TWEAK - We'll assume that whatever games we want referenced within an article will be title cased.
+                //So therefore, only check words that are title cased
+                if ((wordSet[0] === wordSet[0].toUpperCase()) && wordSet.length >= 4) {
+                    
+                    var currRankedGames = [];
+                    var contentTitle = latinizedTitle.toLowerCase();
+                    var currContentTitle = content.title;
+                    var currWordTag = wordSet.trim();
 
-                    var delayedFunction = function () {
-                        gameDB.searchGames(wordSet).then(function (data) {
-                            if (data !== null && data !== undefined) {
-                                //TESTING: Write Matches to file in CSV - Just GamesDB matches for now
-                                var options = {
-                                    tagNameProcessors: [removeColon],
-                                    ignoreAttrs : false
-                                }
+                    si.search({ "query": { "title": [wordSet] } }, function (err, searchResults) {
+                        //do something with searchResults
+                        if (searchResults.totalHits > 0) {
+
+                            //Now for every game we retrieved from our store, peform our word-frequency ranking
+                            _.each(searchResults.hits, function (hitItem, currGameIndex) {
+                                //break down game title into multiple words
+                                var currGame = hitItem.document;
+                                var currTitle = latinizer.latinize(removeSpecialChars(currGame.title));
                                 
+                                var currWords = new pos.Lexer().lex(currTitle);
+                                var currTagger = new pos.Tagger();
+                                var currTaggedWordsAndPOS = currTagger.tag(currWords);
+                                var currTaggedWords = [];
                                 
-                                parseXML(data, options, function (err, parsedResult) {
-                                    var gamesTitles = '';
-                                    
-                                    if (parsedResult.Data !== null && parsedResult.Data !== undefined && parsedResult.Data.Game !== null && parsedResult.Data.Game !== undefined && parsedResult.Data.Game.length > 0) {
-                                        _.each(parsedResult.Data.Game, function (gameArray) {
-                                            if (gameArray !== null && gameArray !== undefined  && gameArray.GameTitle !== null && gameArray.GameTitle !== undefined && gameArray.GameTitle.length > 0) {
-                                                gamesTitles += gameArray.GameTitle[0] + '|';
-                                            }
-                                        });
-                                    }
-                                    
-                                    fs.appendFile('thegameDBmatches.txt', content.title + ', ' + wordSet + ', ' + gamesTitles + os.EOL, function (err) {
-                                        if (err) return console.log(err);
-                                    });
+                                //Get just the tagged words - remove the POS
+                                _.each(currTaggedWordsAndPOS, function (currTaggedWordArray) {
+                                    currTaggedWords.push(currTaggedWordArray[0].trim());
                                 });
-                            
-                            }
-                        });
-                    };
+                                
+                                //Now that we have all the tagged words - in an array - start the frequency-word ranking for each word. When we frequency
+                                //rank a game, store it in the currRankedGames array
+                                var currWordRank = 0;
+                                var copyContentTitle = contentTitle;
+                                var matchedWordIndexes = [];
+                                
+                                _.each(currTaggedWords, function (currWord, currWordIndex) {
+                                    var occured = copyContentTitle.indexOf(currWord.toLowerCase().trim());
+                                    if (occured !== null && occured !== undefined && occured > -1) {
+                                        var indexExists = _.find(matchedWordIndexes, function (indexItem) {
+                                            return indexItem == occured;
+                                        });
+                                        
+                                        if (indexExists == null || indexExists == undefined) {
+                                            //match - add to it's rank: Update we will factor in the length of the word as part of it's rank
+                                            //so what this means is the more letters a matched word has, the higher it's rank
+                                            currWordRank += currWord.length;
+                                            
+                                            //remove the matched item from the title
+                                            copyContentTitle = spliceSlice(copyContentTitle, occured, currWord.length);
+                                        }
+                                    }
+                                });
+                                
+                                //save the game and it's rank within our array - if the game title already exists within our array
+                                //(the exact same title - word for word) then we pass it, and dont add it in, since we dont want duplicates
+                                var rankedGameAlready = _.findWhere(currRankedGames, { game: currGame.title });
+                                if (!rankedGameAlready) {
+                                    currRankedGames.push({ game: currGame.title, rank: currWordRank });
+                                }
+                            });
 
-                    limiter.removeTokens(1, function () {
-                        delayedFunction();
-                    });
+                            if (currRankedGames.length > 0) {
+                                var maxRankedGame = _.max(currRankedGames, function (rankedGame) { return rankedGame.rank; });
+                                
+                                if (maxRankedGame) {
+                                    //save the game for this article within our DB
+                                    var ignContentRef = new Firebase(config.firebase.url + config.firebase.endpoints.content + '/' + config.firebase.contentEndPoints.ign);
+                                    var ignContentProof = new Fireproof(ignContentRef);
+                                    
+                                    var delayedFunction = function () {
+                                        ignContentProof
+                                        .orderByChild('title')
+                                        .equalTo(content.title)
+                                        .once('value', function (contentSnapshot) {
+                                                var retrievedContent = contentSnapshot.val();
+                                                var currWordSearchTag = currWordTag;
+                                            
+                                                if (retrievedContent == null || retrievedContent == undefined) {
+                                                
+                                                    //do an add - simple stuff
+                                                    var newContent = {
+                                                        title: content.title,
+                                                        media: content.media,
+                                                        url: content.url,
+                                                        description: content.description
+                                                    }
+                                                
+                                                    var newignContentRef = new Firebase(config.firebase.url + config.firebase.endpoints.content + '/' + config.firebase.contentEndPoints.ign);
+                                                    var newignContentProof = new Fireproof(newignContentRef);
+                                                    console.log('saved: ' + currContentTitle);
+                                                
+                                                    //save record
+                                                    var newignContentAddedRef = newignContentProof.push(newContent);
+                                                
+                                                    if (newignContentAddedRef) {
+                                                    
+                                                        //add game
+                                                        var newignContentTagsRef = newignContentAddedRef.child('games');
+                                                        newignContentTagsRef.push({ game: maxRankedGame.game, matchedrank: maxRankedGame.rank });
+                                                    
+                                                        //add the tags
+                                                        var newignContentTagsRef = newignContentAddedRef.child('tags');
+                                                        newignContentTagsRef.push({ tag: currWordSearchTag });
+                                                    }
+                                                }
+                                                else {
+                                                    //we might have more than one article with the same title (not likely, but we need to acct for it)
+                                                    var retrievedContentList = _.map(retrievedContent, function (ignContent, ignContentKey) {
+                                                        return { id: ignContentKey, content: ignContent };
+                                                    });
+                                                
+                                                    if (retrievedContentList) {
+                                                        //update all instances of the content retrieved
+                                                        _.each(retrievedContentList, function (ignContent) {
+                                                        
+                                                            //update the tags & matched games of the article - (this way, we'll build an index of search tags for the article as well)
+                                                            var ignContentItemTagsRef = new Firebase(config.firebase.url + config.firebase.endpoints.content + '/' + config.firebase.contentEndPoints.ign + '/' + ignContent.id + '/tags');
+                                                            var ignContentItemTagsProof = new Fireproof(ignContentItemTagsRef);
+                                                        
+                                                            var ignContentItemGamesRef = new Firebase(config.firebase.url + config.firebase.endpoints.content + '/' + config.firebase.contentEndPoints.ign + '/' + ignContent.id + '/games');
+                                                            var ignContentItemGamesProof = new Fireproof(ignContentItemGamesRef);
+                                                        
+                                                            //Update Tags
+                                                            ignContentItemTagsProof.once('value', function (tagsSnapshot) {
+                                                                var tags = tagsSnapshot.val();
+                                                            
+                                                                //there should be at least one tag in this scenario
+                                                                if (tags) {
+                                                                    var tagsList = _.map(tags, function (tag, tagKey) { return tag; });
+                                                                    if (tagsList) {
+                                                                        //check if the tag we are about to add exists already
+                                                                        var searchedTag = _.findWhere(tagsList, { tag: currWordSearchTag });
+                                                                    
+                                                                        if (!searchedTag) {
+                                                                            //save the tag to the list
+                                                                            ignContentItemTagsProof.push({ tag: currWordSearchTag });
+                                                                        }
+                                                                    }
+                                                                }
+                                                            });
+                                                        
+                                                            //Update Games
+                                                            ignContentItemGamesProof.once('value', function (gamesSnapshot) {
+                                                                var games = gamesSnapshot.val();
+                                                            
+                                                                //there should be at least one tag in this scenario
+                                                                if (games) {
+                                                                    var gamesList = _.map(games, function (game, gameKey) { return game; });
+                                                                    if (gamesList) {
+                                                                        //check if the tag we are about to add exists already
+                                                                        var searchedGame = _.findWhere(gamesList, { game: maxRankedGame.game });
+                                                                    
+                                                                        if (!searchedGame) {
+                                                                            //save the tag to the list
+                                                                            ignContentItemGamesProof.push({ game: maxRankedGame.game, matchedrank: maxRankedGame.rank });
+                                                                        }
+                                                                    }
+                                                                }
+                                                            });
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                    };
+                                    
+                                    limiter.removeTokens(1, function () {
+                                        delayedFunction();
+                                    });
+                                }
+                            }
+                        }
+                    })
                 }
             });
         });
@@ -189,7 +303,7 @@ var pullCatch = function (feed) {
                         }
                     }
                 }
-                content.push({ title: title, description: description, media: media });
+                content.push({ title: title, description: description, media: media, url : url });
             });
 
             categorizeContent(content);
@@ -217,7 +331,20 @@ var ign_fisher = {
 }
 
 function removeColon(name){
-    return name.replace(':', '_');
+    name = name.replace(':', '_');
+    return name;
+}
+
+function removeSpecialChars(word){
+    word = word.replace("'s", "");
+    word = word.replace("?", "");
+    word = word.replace("-", " ");
+
+    return word;
+}
+
+function spliceSlice(str, index, count, add) {
+    return str.slice(0, index) + (add || "") + str.slice(index + count);
 }
 
 module.exports = ign_fisher;

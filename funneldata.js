@@ -101,27 +101,27 @@
                 {
                     "categories" : ["article"],
                     "url" : "http://feeds.ign.com/ign/games-articles?format=xml"
-                },
-                {
-                    "categories" : ["video"],
-                    "url" : "http://feeds.ign.com/ign/games-videos?format=xml"
-                },
-                {
-                "categories" : ["walkthrough"],
-                "url" : "http://feeds.ign.com/ignfeeds/faqs?format=xml"
-                },
-                {
-                    "categories" : ["video review"],
-                    "url" : "http://feeds.ign.com/ign/video-reviews?format=xml"
-                },
-                {
-                    "categories" : ["video guide"],
-                    "url" : "http://feeds.ign.com/ign/video-guides?format=xml"
-                },
-                {
-                    "categories" : ["review"],
-                    "url" : "http://feeds.ign.com/ign/game-reviews?format=xml"
                 }
+                //{
+                //    "categories" : ["video"],
+                //    "url" : "http://feeds.ign.com/ign/games-videos?format=xml"
+                //},
+                //{
+                //"categories" : ["walkthrough"],
+                //"url" : "http://feeds.ign.com/ignfeeds/faqs?format=xml"
+                //},
+                //{
+                //    "categories" : ["video review"],
+                //    "url" : "http://feeds.ign.com/ign/video-reviews?format=xml"
+                //},
+                //{
+                //    "categories" : ["video guide"],
+                //    "url" : "http://feeds.ign.com/ign/video-guides?format=xml"
+                //},
+                //{
+                //    "categories" : ["review"],
+                //    "url" : "http://feeds.ign.com/ign/game-reviews?format=xml"
+                //}
             ]
         },
         {

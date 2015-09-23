@@ -32,6 +32,8 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="config.js" />
+    <Compile Include="fishers\ign-old.js" />
+    <Compile Include="fishers\ign.js" />
     <Compile Include="fishers\twitch.js" />
     <Compile Include="funneldata.js" />
     <Compile Include="giantbomb.js" />
@@ -39,6 +41,7 @@
     <Compile Include="utils\latinizer.js" />
     <Content Include="data\categories.json" />
     <Content Include="data\sources.json" />
+    <Content Include="games.json" />
     <Content Include="package.json" />
     <Content Include="README.md" />
   </ItemGroup>

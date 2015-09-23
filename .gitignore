@@ -19,6 +19,8 @@ $RECYCLE.BIN/
 
 #node_modules
 node_modules
+si
+gamesindex
 
 # =========================
 # Operating System Files
@@ -47,3 +49,4 @@ node_modules
 Network Trash Folder
 Temporary Items
 .apdisk
+*.ldb

@@ -1,7 +1,7 @@
 ﻿var config = {
     "limit" : 25,
     "rssFeedIntervalMins" : 30,
-    "titleWordLimit" : 5,
+    "titleWordLimit" : 1000,
     "giant_bomb": {
         "url" : "http://www.giantbomb.com/api/",
         "key" : "9caedc058d2f9553e2de63e66dde3d81df03d6d0",
@@ -35,14 +35,22 @@
         "url" : " http://thegamesdb.net/api/",
         "endpoints": {
             "GetGamesList" : "GetGamesList.php",
-            "GetGame" : "GetGame.php"
+            "GetGame" : "GetGame.php",
+            "GetPlatformGames" : "GetPlatformGames.php"
         }
     },
     "firebase" : {
         "url" : 'https://funnelope.firebaseio.com/',
         "secret" : 'Rq5E8qkQNfPhFNegvDpeMjCkGcr8ccbmunLhclZd',
         "endpoints" : {
-            "gametags" : "gametags"
+            "gametags" : "gametags",
+            "games" : "games",
+            "content" : "content"
+        },
+        "contentEndPoints": {
+            "twitch" : "twitch",
+            "youtube" : "youtube",
+            "ign" : "ign"
         }
     }
 };

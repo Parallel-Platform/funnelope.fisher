@@ -19,10 +19,25 @@ var gamesdb = {
                 timeout : 1800000
             }
             
-            console.log('calling GamesDB.net');
+            console.log('calling GamesDB.net - GetGamesList');
             return rp(options);
         }
         return null;
+    },
+
+    getGamesByPlatform: function (platformid){
+        if (platformid) {
+            var gameDbRef = config.thegamedb;
+            var gameDbUrl = gameDbRef.url + gameDbRef.endpoints.GetPlatformGames + '?platform=' + platformid;
+
+            options = {
+                uri : gameDbUrl,
+                timeout : 1800000
+            }
+
+            console.log('calling GamesDB.net - GetPlatformGames');
+            return rp(options);
+        }
     }
 };
 
