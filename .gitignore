@@ -18,9 +18,14 @@ $RECYCLE.BIN/
 *.lnk
 
 #node_modules
+
+#levelDB files
 node_modules
 si
 gamesindex
+
+#config & secret files
+config.js
 
 # =========================
 # Operating System Files
