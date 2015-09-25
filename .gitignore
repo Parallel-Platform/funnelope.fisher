@@ -17,7 +17,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-#node_modules
+#app specific data
+content
+games.json
 
 #levelDB files
 node_modules
