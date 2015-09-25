@@ -32,15 +32,16 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="config.js" />
-    <Compile Include="fishers\ign-old.js" />
+    <Compile Include="fishers\gamespot.js" />
+    <Compile Include="fishers\giantbomb.js" />
     <Compile Include="fishers\ign.js" />
     <Compile Include="fishers\twitch.js" />
     <Compile Include="funneldata.js" />
     <Compile Include="giantbomb.js" />
     <Compile Include="thegamedb.js" />
     <Compile Include="utils\latinizer.js" />
-    <Content Include="data\categories.json" />
-    <Content Include="data\sources.json" />
+    <Content Include="content\gamespot.json" />
+    <Content Include="content\ign.json" />
     <Content Include="games.json" />
     <Content Include="package.json" />
     <Content Include="README.md" />
@@ -48,7 +49,7 @@
   <ItemGroup>
     <Folder Include="fishers\" />
     <Folder Include="gutters\" />
-    <Folder Include="data\" />
+    <Folder Include="content\" />
     <Folder Include="utils\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
