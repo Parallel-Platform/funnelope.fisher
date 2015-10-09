@@ -27,7 +27,9 @@
         "LFG",
         "show",
         "match",
-        "game"
+        "game",
+        "showcase",
+        "mod"
     ],
 
     sources: [
@@ -137,16 +139,220 @@
             "subCategory": "Video Games"
         },
         {
+            "name" : "nexusmods",
             "rank": 5,
             "domain": "nexusmods.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "feeds" : [
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/darksouls/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/darksouls/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/darksouls2/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/darksouls2/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/dragonage/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/dragonage/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/dragonage2/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/dragonage2/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/dragonageinquisition/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/dragonageinquisition/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/fallout3/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/fallout3/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/dyinglight/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/dyinglight/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/newvegas/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/newvegas/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/finalfantasy14/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/finalfantasy14/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/gta5/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/gta5/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/masseffect3/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/masseffect3/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/metalgearsolidv/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/metalgearsolidv/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/phantompain/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/phantompain/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/minecraft/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/minecraft/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/morrowind/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/morrowind/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/oblivion/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/oblivion/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/oblivion/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/skyrim/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/skyrim/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/starbound/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/starbound/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/stateofdecay/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/stateofdecay/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/tabletopsimulator/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/witcher2/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/witcher2/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/witcher3/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/witcher3/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/warthunder/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/warthunder/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/worldoftanks/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/worldoftanks/rss/updatedtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/xcom/rss/newtoday/"
+                },
+                {
+                    "categories" : ["mod"],
+                    "url" : "http://www.nexusmods.com/xcom/rss/updatedtoday/"
+                }
+            ]
         },
         {
             "rank": 6,
             "domain": "jeuxvideo.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "language" : "french"
         },
         {
             "rank": 7,
@@ -155,16 +361,28 @@
             "subCategory": "Video Games"
         },
         {
+            "name" : "rockstargames",
             "rank": 8,
             "domain": "rockstargames.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "feeds" : [
+                //{
+                //    "categories" : ["news"],
+                //    "url" : "http://www.rockstargames.com/newswire.rss"
+                //}
+                {
+                    "categories" : ["news"],
+                    "url" : "http://www.rockstargames.com/newswire/tag/grand-theft-auto.rss"
+                }
+            ]
         },
         {
             "rank": 9,
             "domain": "duowan.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "language" : "mandarin"
         },
         {
             "rank": 10,
@@ -185,6 +403,7 @@
             "subCategory": "Video Games"
         },
         {
+            "name" : "gamespot",
             "rank": 13,
             "domain": "gamespot.com",
             "mainCategory": "Games",
@@ -193,6 +412,22 @@
                 {
                     "categories" : ["review"],
                     "url" : "http://www.gamespot.com/feeds/reviews/"
+                },
+                {
+                    "categories" : ["showcase"],
+                    "url" : "http://www.gamespot.com/feeds/new-games/"
+                },
+                {
+                    "categories" : ["article"],
+                    "url" : "http://www.gamespot.com/feeds/news/"
+                },
+                {
+                    "categories" : ["video"],
+                    "url" : "http://www.gamespot.com/feeds/video/"
+                },
+                {
+                    "categories" : ["image"],
+                    "url" : "http://www.gamespot.com/feeds/image-galleries/"
                 }
             ]
         },

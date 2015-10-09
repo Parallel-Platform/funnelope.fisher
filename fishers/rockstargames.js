@@ -1,14 +1,14 @@
-﻿/* ----------------------------------------------------------------------------
- * Name: gamespot.js
- * Description: gamespot fisherman
+﻿/* -----------------------------------------------------------------------------------------
+ * Name: rockstargames.js
+ * Description: Rockstar Games fisherman
  * 
- * Gamespot makes it's data available via RSS 2.0 feeds.
+ * Rockstar Games makes it's data available via RSS 2.0 feeds. It's News Data & GTA V data
  * we are going to need to retrieve all IGN feed data, extract
  * what we need, figure out if what we extracted is stale,
- * categorize it for the game it pertains to, and save it to our content store
+ * categorize it for the game it pertains to, and save it to our content DB
  * 
  * TODO: Need some serious Unit Tests for this
- * --------------------------------------------------------------------------*/
+ * --------------------------------------------------------------------------------------*/
 
 var Q = require('q');
 var os = require('os');
@@ -30,19 +30,17 @@ var gamesStore = require('../games.json');
 gamesStore.games = gamesStore.games == null || gamesStore.games == undefined ? [] : gamesStore.games;
 
 //Article Store
-var gamespotArticles = require('../content/gamespot.json');
-gamespotArticles.gamespot = gamespotArticles.gamespot == null || gamespotArticles.gamespot == undefined ? [] : gamespotArticles.gamespot;
+var rockstarGamesArticles = require('../content/rockstargames.json');
+rockstarGamesArticles.rockstargames = rockstarGamesArticles.rockstargames == null || rockstarGamesArticles.rockstargames == undefined ? [] : rockstarGamesArticles.rockstargames;
 
 var funneldata = require('../funneldata');
 var config = require('../config');
 var latinizer = require('../utils/latinizer');
-var utils = require('../utils/utils');
 
-var gamespotCategories = [
-    { gamespot: 'gamespot reviews', category: 'review' },
-    { gamespot: 'gamespot game listings', category: 'showcase' },
-    { gamespot: 'gamespot videos', category: 'video' },
-    { gamespot: 'gamespot image galleries', category: 'image'}
+var rockstarGTAGames = [
+    { game: 'Grand Theft Auto V' },
+    { game: 'Grand Theft Auto: San Andreas' },
+    { game: 'GTA Online' }
 ];
 
 var categorizeContent = function (contentList) {
@@ -63,7 +61,7 @@ var categorizeContent = function (contentList) {
              * You can calculate the number of combinations in a title using the formula (n(n + 1)) / 2 where 'n' is the number of words in
              * a game title/sentence.
              * --------------------------------------------------------------------------------------------------------------------------*/
-            var latinizedTitle = latinizer.latinize(utils.removeSpecialChars(content.title));
+            var latinizedTitle = latinizer.latinize(removeSpecialChars(content.title));
             var words = new pos.Lexer().lex(latinizedTitle);
             var tagger = new pos.Tagger();
             var taggedWordsAndPOS = tagger.tag(words);
@@ -107,7 +105,7 @@ var categorizeContent = function (contentList) {
 
             _.each(combinedWordSets, function (wordSet) {
                 
-                //TWEAK - We'll assume that whatever games we want referenced within the content will most likely be title cased.
+                //TWEAK - We'll assume that whatever games we want referenced within an article will be title cased.
                 //So therefore, only check words that are title cased
                 if ((wordSet[0] === wordSet[0].toUpperCase()) && wordSet.length >= 4) {
                     
@@ -125,13 +123,28 @@ var categorizeContent = function (contentList) {
                         return memo;
                     }, []);
                     
+                    //NEW ADDITION: Rockstar Games-specific (GTA)
+                    //check to see if any of our top priority GTA games ae included in the list, if they aren't, add them in there
+                    //(This needs to by pass the word frequency ranking
+                    //for (gameIndex = 0; gameIndex < rockstarGTAGames.length; gameIndex++) {
+                    //    var foundGame = _.findWhere(searchResults, { title: rockstarGTAGames[gameIndex].game });
+
+                    //    if (foundGame == null || foundGame == undefined) {
+                    //        var specificGame = _.findWhere(gamesStore.games, { title: rockstarGTAGames[gameIndex].game });
+
+                    //        if (specificGame !== null && specificGame !== undefined) {
+                    //            searchResults.push(specificGame);
+                    //        }
+                    //    }
+                    //}
+                    
                     //do something with searchResults
                     if (searchResults !== null && searchResults !== undefined && searchResults.length > 0) {
                         
                         //Now for every game we retrieved from our store, peform our word-frequency ranking
                         _.each(searchResults, function (currGame, currGameIndex) {
                             //break down game title into multiple words
-                            var currTitle = latinizer.latinize(utils.removeSpecialChars(currGame.title));
+                            var currTitle = latinizer.latinize(removeSpecialChars(currGame.title));
                             
                             var currWords = new pos.Lexer().lex(currTitle);
                             var currTagger = new pos.Tagger();
@@ -162,7 +175,7 @@ var categorizeContent = function (contentList) {
                                         currWordRank += currWord.length;
                                         
                                         //remove the matched item from the title
-                                        copyContentTitle = utils.spliceSlice(copyContentTitle, occured, currWord.length);
+                                        copyContentTitle = spliceSlice(copyContentTitle, occured, currWord.length);
                                     }
                                 }
                             });
@@ -174,6 +187,30 @@ var categorizeContent = function (contentList) {
                                 currRankedGames.push({ game: currGame.title, rank: currWordRank, gameObj: currGame });
                             }
                         });
+                        
+                        //ADDITION: CHEATING - BOOST THE RANK OF ALL GTA GAMES
+                        //var gtaOnlineRanked = _.filter(currRankedGames, function (rankedGame) { 
+                        //    return rockstarGTAGames[2].game.trim().toLowerCase() == rankedGame.gameObj.title.trim().toLowerCase();
+                        //});
+                        //var gtaVRanked = _.findWhere(currRankedGames, function (rankedGame) {
+                        //    return rockstarGTAGames[0].game.trim().toLowerCase() == rankedGame.gameObj.title.trim().toLowerCase();
+                        //});
+                        //var gtaSanAndreasRanked = _.findWhere(currRankedGames, function (rankedGame) {
+                        //    return rockstarGTAGames[1].game.trim().toLowerCase() == rankedGame.gameObj.title.trim().toLowerCase();
+                        //});
+                        
+                        ////Pad the rank by a little
+                        //if (gtaSanAndreasRanked !== null && gtaSanAndreasRanked !== undefined) {
+                        //    gtaSanAndreasRanked.rank += 20;
+                        //}
+                        
+                        //if (gtaVRanked !== null && gtaVRanked !== undefined) {
+                        //    gtaVRanked.rank += 21;
+                        //}
+                        
+                        //if (gtaSanAndreasRanked !== null && gtaSanAndreasRanked !== undefined) {
+                        //    gtaSanAndreasRanked.rank += 22;
+                        //}
                         
                         if (currRankedGames.length > 0) {
                             //Determine how we evaluate relevancy - right now it's based on rank, but it sould also account some type of context...
@@ -189,7 +226,7 @@ var categorizeContent = function (contentList) {
                             if (maxRankedGame !== null && maxRankedGame !== undefined) {
                                 
                                 //Check the article store for any articles that have the same title
-                                var articleResults = _.reduce(gamespotArticles.gamespot, function (memo, article) {
+                                var articleResults = _.reduce(rockstarGamesArticles.rockstargames, function (memo, article) {
                                     var match = s.include(article.title.trim().toLowerCase(), content.title.trim().toLowerCase());
                                     
                                     if (match) {
@@ -212,24 +249,34 @@ var categorizeContent = function (contentList) {
                                         if (foundTag == null || foundTag == undefined) {
                                             article.tags.push({ tag: currWordTag });
                                         }
+                                        
+                                        //Check for tags from IGN directly
+                                        if (content.tags !== null && content.tags !== undefined) {
+                                            _.each(content.tags, function (tag) {
+                                                var foundRockstarTag = _.findWhere(article.tags, { tag: tag });
+                                                if (foundRockstarTag == null || foundRockstarTag == undefined) {
+                                                    article.tags.push({ tag: tag });
+                                                }
+                                            });
+                                        }
                                     })
                                     
                                     //update the ign articles json
                                     //write our new article to the json file.
-                                    var articleJSON = JSON.stringify(gamespotArticles, null, 4);
-                                    fs.writeFileSync("content/gamespot.json", articleJSON);
+                                    var articleJSON = JSON.stringify(rockstarGamesArticles, null, 4);
+                                    fs.writeFileSync("content/rockstargames.json", articleJSON);
                                     
-                                    console.log('updated gamespot content: ' + currContentTitle);
+                                    console.log('updated rockstar games content: ' + currContentTitle);
                                 }
                                 else {
                                     
                                     //Add the new article - simple stuff
                                     var newContent = {
                                         title: content.title,
-                                        media: content.media,
+                                        //media: content.media,
                                         url: content.url,
                                         description: content.description,
-                                        source: content.source,
+                                        //source: content.source,
                                         publishdate: content.publishdate,
                                         category: content.category,
                                         games: [],
@@ -239,14 +286,21 @@ var categorizeContent = function (contentList) {
                                     newContent.games.push({ game: maxRankedGame.game, matchedrank: maxRankedGame.rank });
                                     newContent.tags.push({ tag: currWordTag });
                                     
+                                    //If we have extra tags form IGN, add them too
+                                    if (content.tags !== null && content.tags !== undefined) {
+                                        _.each(content.tags, function (tag) {
+                                            newContent.tags.push({ tag: tag });
+                                        });
+                                    }
+                                    
                                     //Store the article
-                                    gamespotArticles.gamespot.push(newContent);
+                                    rockstarGamesArticles.rockstargames.push(newContent);
                                     
                                     //write our new article to the json file.
-                                    var articleJSON = JSON.stringify(gamespotArticles, null, 4);
-                                    fs.writeFileSync("content/gamespot.json", articleJSON);
+                                    var articleJSON = JSON.stringify(rockstarGamesArticles, null, 4);
+                                    fs.writeFileSync("content/rockstargames.json", articleJSON);
                                     
-                                    console.log('saved gamespot content: ' + currContentTitle);
+                                    console.log('saved rockstar games content: ' + currContentTitle);
                                 }
                             }
                         }
@@ -258,20 +312,21 @@ var categorizeContent = function (contentList) {
 }
 
 var pullCatch = function (feed) {
-    console.log('DING: Caught some Gamespot fish...');
+    console.log('DING: Caught some Rockstar Games fish...');
     
     var options = {
-        tagNameProcessors: [utils.removeColon],
+        tagNameProcessors: [removeColon],
         ignoreAttrs : false
     }
     
     parseXML(feed, options, function (err, result) {
         if (!err && result && result.rss && result.rss.channel && result.rss.channel.length > 0) {
             
-            var feed_title = result.rss.channel[0].title !== null && result.rss.channel[0].title !== undefined && result.rss.channel[0].title.length > 0 ? result.rss.channel[0].title[0] : '';
-           
-            var categoryObj = _.findWhere(gamespotCategories, { gamespot: feed_title.toLowerCase() });
-            var category = categoryObj !== null && categoryObj !== undefined ? categoryObj.category : '';
+            var feed_description = '';
+            if (result.rss.channel[0].description !== null && result.rss.channel[0].title !== undefined && result.rss.channel[0].title.length > 0) {
+                feed_title = result.rss.channel[0].title[0];
+            }
+            
             var content = [];
             
             //Haul in our catch and this is where we gut them and extract what we need from them
@@ -279,75 +334,30 @@ var pullCatch = function (feed) {
                 var title = feedItem.title !== null && feedItem.title !== undefined && feedItem.title.length > 0 ? feedItem.title[0] : null;
                 var description = feedItem.description !== null && feedItem.description !== undefined && feedItem.description.length > 0 ? feedItem.description[0] : null;
                 var url = feedItem.link !== null && feedItem.link !== undefined && feedItem.link.length > 0 ? feedItem.link[0] : null;
-                var mediaContentArray = feedItem.media_content;
-                var source = feedItem.source !== null && feedItem.source !== undefined && feedItem.source.length > 0 ?  feedItem.source[0]._ : null;
-                var media = {};
-                var tagsExtra = [];
                 var publishdate = feedItem.pubDate !== null && feedItem.pubDate !== undefined && feedItem.pubDate.length > 0 ?  feedItem.pubDate[0] : null;
                 
-                var product = null;
-                var productRaw = feedItem.product_product !== null && feedItem.product_product !== undefined && feedItem.product_product.length > 0 ? feedItem.product_product[0] : null;
-                
-                //Now get all the meta data for the products we need
-                if (productRaw !== null) {
-                    product = {};
-                    product.productgrouping = productRaw.product_grouping !== null && productRaw.product_grouping !== undefined && productRaw.product_grouping.length > 0 ? productRaw.product_grouping[0] : null;
-                    product.producttitle = productRaw.product_title !== null && productRaw.product_title !== undefined && productRaw.product_title.length > 0 ? productRaw.product_title[0] : null;
-                    product.type = productRaw.product_type !== null && productRaw.product_type !== undefined && productRaw.product_type.length > 0 ? productRaw.product_type[0] : null;
-                    product.url = productRaw.product_url !== null && productRaw.product_url !== undefined && productRaw.product_url.length > 0 ? productRaw.product_url[0] : null;
-                }
-                
-                if (mediaContentArray !== null && mediaContentArray !== undefined && mediaContentArray.length > 0) {
-                    var mediaContentItem = mediaContentArray[0];
-                    
-                    if (mediaContentItem !== null && mediaContentItem !== undefined && mediaContentItem.$ !== null && mediaContentItem.$ !== undefined) {
-                        
-                        var image = {
-                            height: mediaContentItem.$.height !== null && mediaContentItem.$.height !== undefined && mediaContentItem.$.height !== '' ? mediaContentItem.$.height : '',
-                            width: mediaContentItem.$.width !== null && mediaContentItem.$.width !== undefined && mediaContentItem.$.width !== '' ? mediaContentItem.$.width : '',
-                            url: mediaContentItem.$.url !== null && mediaContentItem.$.url !== undefined && mediaContentItem.$.url !== '' ? mediaContentItem.$.url : '',
-                            type: mediaContentItem.$.type !== null && mediaContentItem.$.type !== undefined && mediaContentItem.$.type !== '' ? mediaContentItem.$.type : '',
-                        };
-
-                        media = image;
-                        
-                        //media = {
-                        //    image : image,
-                        //    type : mediaContentItem.$.type !== null && mediaContentItem.$.type !== undefined && mediaContentItem.$.type !== '' ? mediaContentItem.$.type : '',
-                        //    url : mediaContentItem.$.url !== null && mediaContentItem.$.url !== undefined ? mediaContentItem.$.url : '',
-                        //    bitrate: mediaContentItem.$.bitrate !== null && mediaContentItem.$.bitrate !== undefined ? mediaContentItem.$.bitrate : '',
-                        //    height: mediaContentItem.$.height !== null && mediaContentItem.$.height !== undefined ? mediaContentItem.$.height : '',
-                        //    width: mediaContentItem.$.width !== null && mediaContentItem.$.width !== undefined ? mediaContentItem.$.width : '',
-                        //}
-                    }
-                }
                 content.push({
+                    category: 'news',
+                    feedtitle: feed_title,
                     title: title, 
                     description: description, 
-                    media: media, 
-                    url : url,
-                    source: source,
-                    publishdate: publishdate,
-                    product: product !== null && product !== undefined ? product : null,
-                    tags: tagsExtra !== null && tagsExtra !== undefined && tagsExtra.length > 0 ? tagsExtra : null,
-                    category: category
+                    url : url
                 });
             });
-            
             categorizeContent(content);
         }
     });
 }
 
-var gamespot_fisher = {
+var rockstargames_fisher = {
     goFishing: function () {
-        console.log('DING: Fishing for Gamespot fish...');
+        console.log('DING: Fishing for Rockstar Games fish...');
         
-        var gamespot_parent = this;
-        var gamespot_source = _.findWhere(funneldata.sources, { name : "gamespot" });
+        var rockstargames_parent = this;
+        var rockstargames_source = _.findWhere(funneldata.sources, { name : "rockstargames" });
         
-        if (gamespot_source !== null && gamespot_source !== undefined) {
-            _.each(gamespot_source.feeds, function (feedSource) {
+        if (rockstargames_source) {
+            _.each(rockstargames_source.feeds, function (feedSource) {
                 var source = feedSource;
                 rp(feedSource.url).then(pullCatch);
             });
@@ -355,4 +365,21 @@ var gamespot_fisher = {
     },
 }
 
-module.exports = gamespot_fisher;
+function removeColon(name) {
+    name = name.replace(':', '_');
+    return name;
+}
+
+function removeSpecialChars(word) {
+    word = word.replace("'s", "");
+    word = word.replace("?", "");
+    word = word.replace("-", " ");
+    
+    return word;
+}
+
+function spliceSlice(str, index, count, add) {
+    return str.slice(0, index) + (add || "") + str.slice(index + count);
+}
+
+module.exports = rockstargames_fisher;
