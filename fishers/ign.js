@@ -14,7 +14,6 @@ var Q = require('q');
 var os = require('os');
 var fs = require('fs');
 var async = require('async');
-var Fireproof = require('fireproof');
 
 var natural = require('natural');
 var RateLimiter = require('limiter').RateLimiter;
@@ -231,7 +230,7 @@ var categorizeContent = function (contentList) {
                                     var articleJSON = JSON.stringify(ignArticles, null, 4);
                                     fs.writeFileSync("content/ign.json", articleJSON);
 
-                                    console.log('updated: ' + currContentTitle);
+                                    console.log('updated ign content: ' + currContentTitle);
                                 }
                                 else {
 
@@ -265,7 +264,7 @@ var categorizeContent = function (contentList) {
                                     var articleJSON = JSON.stringify(ignArticles, null, 4);
                                     fs.writeFileSync("content/ign.json", articleJSON);
 
-                                    console.log('saved: ' + currContentTitle);
+                                    console.log('saved ign content: ' + currContentTitle);
                                 }
                             }
                         }
@@ -275,7 +274,6 @@ var categorizeContent = function (contentList) {
         });
     }
 }
-
 
 var pullCatch = function (feed) {
     console.log('DING: Caught some IGN fish...');
