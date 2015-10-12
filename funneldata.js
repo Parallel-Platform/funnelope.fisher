@@ -29,7 +29,13 @@
         "match",
         "game",
         "showcase",
-        "mod"
+        "mod",
+        "newrelease",
+        "bestsellers",
+        "pricedrop",
+        "comingsoon",
+        "emulator",
+        "roms"
     ],
 
     sources: [
@@ -385,16 +391,28 @@
             "language" : "mandarin"
         },
         {
+            "name" : "ea",
             "rank": 10,
             "domain": "ea.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "feeds" : [
+                {
+                    "categories" : ["news"],
+                    "url" : "http://news.ea.com/feeds/press_release/46011/rss.xml"
+                },
+                {
+                    "categories" : ["news"],
+                    "url" : "http://news.ea.com/feeds/press_release/46010/rss.xml"
+                }
+            ]
         },
         {
             "rank": 11,
             "domain": "gamersky.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "language" : "mandarin"
         },
         {
             "rank": 12,
@@ -435,19 +453,46 @@
             "rank": 14,
             "domain": "3dmgame.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "language" : "mandarin"
         },
         {
+            "name" : "gamestop",
             "rank": 15,
             "domain": "gamestop.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "feeds" : [
+                {
+                    "categories" : ["bestsellers"],
+                    "url" : "http://www.gamestop.com/SyndicationHandler.ashx?Filter=BestSellers"
+                },
+                {
+                    "categories" : ["comingsoon"],
+                    "url" : "http://www.gamestop.com/SyndicationHandler.ashx?Filter=comingsoon"
+                },
+                {
+                    "categories" : ["newrelease"],
+                    "url" : "http://www.gamestop.com/SyndicationHandler.ashx?Filter=nowshipping"
+                },
+                {
+                    "categories" : ["pricedrop"],
+                    "url" : "http://www.gamestop.com/SyndicationHandler.ashx?Filter=pricedrops"
+                }
+            ]
         },
         {
+            "name" : "emuparadise",
             "rank": 16,
             "domain": "emuparadise.me",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "feeds" : [
+                {
+                    "categories" : ["roms"],
+                    "url" : "http://feeds.feedburner.com/Emuparadise?format=xml"
+                }
+            ]
         },
         {
             "rank": 17,
