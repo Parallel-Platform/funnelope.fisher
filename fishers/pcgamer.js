@@ -1,14 +1,11 @@
 ﻿/* ----------------------------------------------------------------------------
- * Name: emuparadise.js
- * Description: ign fisherman
+ * Name: pcgamer.js
+ * Description: pcgamer fisherman
  * 
- * Emuparadise makes it's data available via RSS 2.0 feeds.
- * we are going to need to retrieve all Emuparadise feed data, extract
+ * PC Gamer makes it's data available via RSS 2.0 feeds.
+ * we are going to need to retrieve all PC Gamer feed data, extract
  * what we need, figure out if what we extracted is stale,
  * categorize it for the game it pertains to, and save it to our content DB
- * 
- * The only caveat is their content isn't organized. So they have roms & emulators
- * in the same feed. If they had it separated, I could assign different categories to them
  * 
  * TODO: Need some serious Unit Tests for this
  * --------------------------------------------------------------------------*/
@@ -17,6 +14,7 @@ var Q = require('q');
 var os = require('os');
 var fs = require('fs');
 var async = require('async');
+var cheerio = require('cheerio');
 
 var natural = require('natural');
 var RateLimiter = require('limiter').RateLimiter;
@@ -33,8 +31,8 @@ var gamesStore = require('../games.json');
 gamesStore.games = gamesStore.games == null || gamesStore.games == undefined ? [] : gamesStore.games;
 
 //Article Store
-var emuparadiseArticles = require('../content/emuparadise.json');
-emuparadiseArticles.emuparadise = emuparadiseArticles.emuparadise == null || emuparadiseArticles.emuparadise == undefined ? [] : emuparadiseArticles.emuparadise;
+var pcgamerArticles = require('../content/pcgamer.json');
+pcgamerArticles.pcgamer = pcgamerArticles.pcgamer == null || pcgamerArticles.pcgamer == undefined ? [] : pcgamerArticles.pcgamer;
 
 var funneldata = require('../funneldata');
 var config = require('../config');
@@ -184,7 +182,7 @@ var categorizeContent = function (contentList) {
                             if (maxRankedGame !== null && maxRankedGame !== undefined) {
                                 
                                 //Check the article store for any articles that have the same title
-                                var articleResults = _.reduce(emuparadiseArticles.ign, function (memo, article) {
+                                var articleResults = _.reduce(pcgamerArticles.pcgamer, function (memo, article) {
                                     var match = s.include(article.title.trim().toLowerCase(), content.title.trim().toLowerCase());
                                     
                                     if (match) {
@@ -207,20 +205,31 @@ var categorizeContent = function (contentList) {
                                         if (foundTag == null || foundTag == undefined) {
                                             article.tags.push({ tag: currWordTag });
                                         }
+                                        
+                                        //Check for tags from PC Gamer directly
+                                        if (content.tags !== null && content.tags !== undefined) {
+                                            _.each(content.tags, function (tag) {
+                                                var foundPCGamerTag = _.findWhere(article.tags, { tag: tag });
+                                                if (foundPCGamerTag == null || foundPCGamerTag == undefined) {
+                                                    article.tags.push({ tag: tag });
+                                                }
+                                            });
+                                        }
                                     })
                                     
-                                    //update the emuparadise articles json
+                                    //update the ign articles json
                                     //write our new article to the json file.
-                                    var articleJSON = JSON.stringify(emuparadiseArticles, null, 4);
-                                    fs.writeFileSync("content/emuparadise.json", articleJSON);
+                                    var articleJSON = JSON.stringify(pcgamerArticles, null, 4);
+                                    fs.writeFileSync("content/pcgamer.json", articleJSON);
                                     
-                                    console.log('updated emuparadise content: ' + currContentTitle);
+                                    console.log('updated pcgamer content: ' + currContentTitle);
                                 }
                                 else {
                                     
                                     //Add the new article - simple stuff
                                     var newContent = {
                                         title: content.title,
+                                        media: content.media,
                                         url: content.url,
                                         description: content.description,
                                         publishdate: content.publishdate,
@@ -232,14 +241,21 @@ var categorizeContent = function (contentList) {
                                     newContent.games.push({ game: maxRankedGame.game, matchedrank: maxRankedGame.rank });
                                     newContent.tags.push({ tag: currWordTag });
                                     
+                                    //If we have extra tags form PC Gamer, add them too
+                                    if (content.tags !== null && content.tags !== undefined) {
+                                        _.each(content.tags, function (tag) {
+                                            newContent.tags.push({ tag: tag });
+                                        });
+                                    }
+                                    
                                     //Store the article
-                                    emuparadiseArticles.emuparadise.push(newContent);
+                                    pcgamerArticles.pcgamer.push(newContent);
                                     
                                     //write our new article to the json file.
-                                    var articleJSON = JSON.stringify(emuparadiseArticles, null, 4);
-                                    fs.writeFileSync("content/emuparadise.json", articleJSON);
+                                    var articleJSON = JSON.stringify(pcgamerArticles, null, 4);
+                                    fs.writeFileSync("content/pcgamer.json", articleJSON);
                                     
-                                    console.log('saved emuparadise content: ' + currContentTitle);
+                                    console.log('saved pcgamer content: ' + currContentTitle);
                                 }
                             }
                         }
@@ -251,7 +267,7 @@ var categorizeContent = function (contentList) {
 }
 
 var pullCatch = function (feed) {
-    console.log('DING: Caught some Emuparadise fish...');
+    console.log('DING: Caught some PC Gamer fish...');
     
     var options = {
         tagNameProcessors: [removeColon],
@@ -260,8 +276,8 @@ var pullCatch = function (feed) {
     
     parseXML(feed, options, function (err, result) {
         if (!err && result && result.rss && result.rss.channel && result.rss.channel.length > 0) {
-            
-            var category = 'mods';
+
+            var category = 'news';
             var content = [];
             
             //Haul in our catch and this is where we gut them and extract what we need from them
@@ -269,45 +285,51 @@ var pullCatch = function (feed) {
                 var title = feedItem.title !== null && feedItem.title !== undefined && feedItem.title.length > 0 ? feedItem.title[0] : null;
                 var description = feedItem.description !== null && feedItem.description !== undefined && feedItem.description.length > 0 ? feedItem.description[0] : null;
                 var url = feedItem.link !== null && feedItem.link !== undefined && feedItem.link.length > 0 ? feedItem.link[0] : null;
-                var mediaContentArray = feedItem.media_content;
-                var source = feedItem.source !== null && feedItem.source !== undefined && feedItem.source.length > 0 ?  feedItem.source[0]._ : null;
-                var media = null;
+                var mediaContentArray = feedItem.content_encoded;
+                var media;
                 var tagsExtra = [];
                 var publishdate = feedItem.pubDate !== null && feedItem.pubDate !== undefined && feedItem.pubDate.length > 0 ?  feedItem.pubDate[0] : null;
                 
-                if (mediaContentArray !== null && mediaContentArray !== undefined && mediaContentArray.length > 0) {
-                    var mediaContentItem = mediaContentArray[0];
+                //PC Gamer sometimes provides images & youtube embdeds. We should get them and save them
+                if (mediaContentArray !== null && mediaContentArray !== undefined && mediaContentArray.length > 0 && mediaContentArray[0] !== '') {
                     
-                    if (mediaContentItem !== null && mediaContentItem !== undefined && mediaContentItem.media_thumbnail && mediaContentItem.media_thumbnail.length > 0) {
-                        
-                        var image = {
-                            height: mediaContentItem.media_thumbnail[0].$.height !== null && mediaContentItem.media_thumbnail[0].$.height !== undefined && mediaContentItem.media_thumbnail[0].$.height !== '' ? mediaContentItem.media_thumbnail[0].$.height : '',
-                            width: mediaContentItem.media_thumbnail[0].$.width !== null && mediaContentItem.media_thumbnail[0].$.width !== undefined && mediaContentItem.media_thumbnail[0].$.width !== '' ? mediaContentItem.media_thumbnail[0].$.width : '',
-                            url: mediaContentItem.media_thumbnail[0].$.url !== null && mediaContentItem.media_thumbnail[0].$.url !== undefined && mediaContentItem.media_thumbnail[0].$.url !== '' ? mediaContentItem.media_thumbnail[0].$.url : ''
+                    var image, video;
+                    var $ = cheerio.load(mediaContentArray[0]);;
+
+                    var img_element = $('img').first();
+                    var iframe_element = $('iframe').first();
+                    
+                    if (img_element !== null && img_element !== undefined) {
+                        image = {
+                            url: img_element.attr('src')
                         };
-                        
-                        media = {
-                            image : image,
-                            type : mediaContentItem.$.type !== null && mediaContentItem.$.type !== undefined && mediaContentItem.$.type !== '' ? mediaContentItem.$.type : '',
-                            url : mediaContentItem.$.url !== null && mediaContentItem.$.url !== undefined ? mediaContentItem.$.url : '',
-                            bitrate: mediaContentItem.$.bitrate !== null && mediaContentItem.$.bitrate !== undefined ? mediaContentItem.$.bitrate : '',
-                            height: mediaContentItem.$.height !== null && mediaContentItem.$.height !== undefined ? mediaContentItem.$.height : '',
-                            width: mediaContentItem.$.width !== null && mediaContentItem.$.width !== undefined ? mediaContentItem.$.width : '',
-                        }
                     }
                     
-                    //The media object from ign also keeps keywords which we can use as tags. GET THEM NAOW!!!!!
-                    if (mediaContentItem !== null && mediaContentItem !== undefined && mediaContentItem.media_keywords && mediaContentItem.media_keywords.length > 0 && mediaContentItem.media_keywords[0] !== '') {
-                        tagsExtra = mediaContentItem.media_keywords[0].split(',');
+                    if (iframe_element !== null && iframe_element !== undefined) {
+                        video = {
+                            url: iframe_element.attr('src')
+                        };
                     }
+                    
+                    //Get the image for the 
+                    media = {
+                        image : image,
+                        video: video
+                    }
+                }
+                
+                //Get other tags from PC Gamer
+                if (feedItem.category !== null && feedItem.category !== undefined && feedItem.category.length > 0) {
+                    _.each(feedItem.category, function (categoryTag) {
+                        tagsExtra.push(categoryTag);
+                    });
                 }
 
                 content.push({
                     title: title, 
                     description: description, 
-                    media: media !== null && media !== undefined ? media : null, 
+                    media: media, 
                     url : url,
-                    source: source,
                     publishdate: publishdate,
                     tags: tagsExtra !== null && tagsExtra !== undefined && tagsExtra.length > 0 ? tagsExtra : null,
                     category: category
@@ -319,15 +341,15 @@ var pullCatch = function (feed) {
     });
 }
 
-var emuparadise_fisher = {
+var pcgamer_fisher = {
     goFishing: function () {
-        console.log('DING: Fishing for Emuparadise fish...');
+        console.log('DING: Fishing for PC Gamer fish...');
         
-        var emuparadise_parent = this;
-        var emuparadise_source = _.findWhere(funneldata.sources, { name : "emuparadise" });
+        var pcgamer_parent = this;
+        var pcgamer_source = _.findWhere(funneldata.sources, { name : "pcgamer" });
         
-        if (emuparadise_source) {
-            _.each(emuparadise_source.feeds, function (feedSource) {
+        if (pcgamer_source) {
+            _.each(pcgamer_source.feeds, function (feedSource) {
                 var source = feedSource;
                 rp(feedSource.url).then(pullCatch);
             });
@@ -352,4 +374,4 @@ function spliceSlice(str, index, count, add) {
     return str.slice(0, index) + (add || "") + str.slice(index + count);
 }
 
-module.exports = emuparadise_fisher;
+module.exports = pcgamer_fisher;

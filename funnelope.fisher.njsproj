@@ -33,11 +33,13 @@
     <Compile Include="app.js" />
     <Compile Include="config.js" />
     <Compile Include="fishers\ea.js" />
+    <Compile Include="fishers\emuparadise.js" />
     <Compile Include="fishers\gamespot.js" />
     <Compile Include="fishers\gamestop.js" />
     <Compile Include="fishers\giantbomb.js" />
     <Compile Include="fishers\ign.js" />
     <Compile Include="fishers\nexusmods.js" />
+    <Compile Include="fishers\pcgamer.js" />
     <Compile Include="fishers\rockstargames.js" />
     <Compile Include="fishers\twitch.js" />
     <Compile Include="funneldata.js" />
@@ -51,6 +53,7 @@
     <Content Include="content\gamestop.json" />
     <Content Include="content\ign.json" />
     <Content Include="content\nexusmods.json" />
+    <Content Include="content\pcgamer.json" />
     <Content Include="content\rockstargames.json" />
     <Content Include="games.json" />
     <Content Include="package.json" />

@@ -510,13 +510,15 @@
             "rank": 19,
             "domain": "inven.co.kr",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "language" : "korean"
         },
         {
             "rank": 20,
             "domain": "minijuegos.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "language" : "spanish"
         },
         {
             "rank": 21,
@@ -570,13 +572,21 @@
             "rank": 29,
             "domain": "tgbus.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "language" : "mandarin"
         },
         {
+            "name" : "pcgamer",
             "rank": 30,
             "domain": "pcgamer.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "feeds" : [
+                {
+                    "categories" : ["news"],
+                    "url" : "http://dynamic.feedsportal.com/pf/510578/http://www.pcgamer.com/feed/rss2/"
+                }
+            ]
         },
         {
             "rank": 31,
