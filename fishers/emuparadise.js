@@ -1,5 +1,5 @@
-<<<<<<< HEAD
-﻿/* ----------------------------------------------------------------------------
+
+/* ----------------------------------------------------------------------------
  * Name: emuparadise.js
  * Description: ign fisherman
  * 
@@ -354,6 +354,3 @@ function spliceSlice(str, index, count, add) {
 }
 
 module.exports = emuparadise_fisher;
-=======
-﻿
->>>>>>> c529e23a2aad262afe7d83ca51ca96ac2bbec35c
