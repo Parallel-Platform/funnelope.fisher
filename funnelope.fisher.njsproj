@@ -32,7 +32,9 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="config.js" />
+    <Compile Include="fishers\ea.js" />
     <Compile Include="fishers\gamespot.js" />
+    <Compile Include="fishers\gamestop.js" />
     <Compile Include="fishers\giantbomb.js" />
     <Compile Include="fishers\ign.js" />
     <Compile Include="fishers\nexusmods.js" />
@@ -43,7 +45,10 @@
     <Compile Include="thegamedb.js" />
     <Compile Include="utils\latinizer.js" />
     <Compile Include="utils\utils.js" />
+    <Content Include="content\ea.json" />
+    <Content Include="content\emuparadise.json" />
     <Content Include="content\gamespot.json" />
+    <Content Include="content\gamestop.json" />
     <Content Include="content\ign.json" />
     <Content Include="content\nexusmods.json" />
     <Content Include="content\rockstargames.json" />

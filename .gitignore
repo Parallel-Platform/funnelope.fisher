@@ -17,6 +17,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+#ntvs files
+.ntvs_analysis.dat.tmp
+
 #app specific data
 content
 games.json
