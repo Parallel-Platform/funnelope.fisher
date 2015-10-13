@@ -133,18 +133,6 @@
             ]
         },
         {
-            "rank": 3,
-            "domain": "gamefaqs.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 4,
-            "domain": "battlefield.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
             "name" : "nexusmods",
             "rank": 5,
             "domain": "nexusmods.com",
@@ -354,19 +342,6 @@
             ]
         },
         {
-            "rank": 6,
-            "domain": "jeuxvideo.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games",
-            "language" : "french"
-        },
-        {
-            "rank": 7,
-            "domain": "xbox.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
             "name" : "rockstargames",
             "rank": 8,
             "domain": "rockstargames.com",
@@ -384,13 +359,6 @@
             ]
         },
         {
-            "rank": 9,
-            "domain": "duowan.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games",
-            "language" : "mandarin"
-        },
-        {
             "name" : "ea",
             "rank": 10,
             "domain": "ea.com",
@@ -406,19 +374,6 @@
                     "url" : "http://news.ea.com/feeds/press_release/46010/rss.xml"
                 }
             ]
-        },
-        {
-            "rank": 11,
-            "domain": "gamersky.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games",
-            "language" : "mandarin"
-        },
-        {
-            "rank": 12,
-            "domain": "oceanofgames.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
         },
         {
             "name" : "gamespot",
@@ -448,13 +403,6 @@
                     "url" : "http://www.gamespot.com/feeds/image-galleries/"
                 }
             ]
-        },
-        {
-            "rank": 14,
-            "domain": "3dmgame.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games",
-            "language" : "mandarin"
         },
         {
             "name" : "gamestop",
@@ -495,87 +443,6 @@
             ]
         },
         {
-            "rank": 17,
-            "domain": "hltv.org",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 18,
-            "domain": "gamestorrents.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 19,
-            "domain": "inven.co.kr",
-            "mainCategory": "Games",
-            "subCategory": "Video Games",
-            "language" : "korean"
-        },
-        {
-            "rank": 20,
-            "domain": "minijuegos.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games",
-            "language" : "spanish"
-        },
-        {
-            "rank": 21,
-            "domain": "dotabuff.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 22,
-            "domain": "360game.vn",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 23,
-            "domain": "ubi.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 24,
-            "domain": "vnwebgame.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 25,
-            "domain": "bungie.net",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 26,
-            "domain": "playground.ru",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 27,
-            "domain": "skidrowreloaded.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 28,
-            "domain": "origin.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 29,
-            "domain": "tgbus.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games",
-            "language" : "mandarin"
-        },
-        {
             "name" : "pcgamer",
             "rank": 30,
             "domain": "pcgamer.com",
@@ -589,124 +456,17 @@
             ]
         },
         {
+            "name" : "engadget",
             "rank": 31,
-            "domain": "7k7k.com",
+            "domain": "engadget.com",
             "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 32,
-            "domain": "ali213.net",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 33,
-            "domain": "ngacn.cc",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 34,
-            "domain": "gry-online.pl",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 35,
-            "domain": "dw.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 36,
-            "domain": "garena.vn",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 37,
-            "domain": "nexon.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 38,
-            "domain": "farming-simulator.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 39,
-            "domain": "gtainside.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 40,
-            "domain": "neogaf.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 41,
-            "domain": "gog.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 42,
-            "domain": "yahoo-mbga.jp",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 43,
-            "domain": "modhoster.de",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 44,
-            "domain": "gta5-mods.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 45,
-            "domain": "riotgames.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 46,
-            "domain": "steamgifts.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 47,
-            "domain": "coolrom.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 48,
-            "domain": "game-game.com.ua",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 49,
-            "domain": "zyngagames.com",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
-        },
-        {
-            "rank": 50,
-            "domain": "desert-operations.es",
-            "mainCategory": "Games",
-            "subCategory": "Video Games"
+            "subCategory": "Video Games",
+            "feeds" : [
+                {
+                    "categories" : ["news"],
+                    "url" : "http://www.engadget.com/tag/@gaming/rss.xml"
+                }
+            ]
         }
     ]
 };

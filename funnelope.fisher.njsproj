@@ -49,6 +49,7 @@
     <Compile Include="utils\utils.js" />
     <Content Include="content\ea.json" />
     <Content Include="content\emuparadise.json" />
+    <Content Include="content\engadget.json" />
     <Content Include="content\gamespot.json" />
     <Content Include="content\gamestop.json" />
     <Content Include="content\ign.json" />
