@@ -30,7 +30,7 @@ npm install
 Run the application via node.js
 
 ```shell
-node server.js
+node app.js
 ```
 
 
