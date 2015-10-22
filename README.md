@@ -5,9 +5,9 @@ funnelope.fisher is a small nodejs program/experiment that retrieves media conte
 
 ## Motivation - (Why the 'fudge' am I even doing this?)
 
-(1) Because it's fun!
-(2) Because I'm trying to build a web-based platform dedicated to video game entertainment/services and 
-(3) Because my 2 little boys dominate the TV in my living room with Bubbleguppy reruns, and so my PC's the only place I can find solace at home, and not go crazy from cartoon sing-a-longs lulz :\
+1. Because it's fun!
+2. Because I'm trying to build a web-based platform dedicated to video game entertainment/services and 
+3. Because my 2 little boys dominate the TV in my living room with Bubbleguppy reruns, and so my PC's the only place I can find solace at home, and not go crazy from cartoon sing-a-longs lulz :\
 
 ## Requirements
 [NodeJS](https://nodejs.org/)
@@ -15,15 +15,15 @@ A games.json file generated from the [funnelope.downloader](https://github.com/P
 
 ## Installation
 
-(*) Install the node dependencies.
+* Install the node dependencies.
 
 ```shell
 npm install
 ```
 
-(*) Pull down the [funnelope.downloader](https://github.com/Parallel-Platform/funnelope.downloader) repo, run it (warning, it takes a long time, as it downloads all video games for "every platform" and stores them to a JSON file) and copy over the games.json file over to this project's root directory
+* Pull down the [funnelope.downloader](https://github.com/Parallel-Platform/funnelope.downloader) repo, run it (warning, it takes a long time, as it downloads all video games for "every platform" and stores them to a JSON file) and copy over the games.json file over to this project's root directory
 
-(*) For each "fisher" you are running (execept Twitch), make sure you have created the appropriate <fisher>.json file in the content folder.
+* For each "fisher" you are running (execept Twitch), make sure you have created the appropriate <fisher>.json file in the content folder.
 
 ## Running
 
