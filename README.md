@@ -10,8 +10,8 @@ funnelope.fisher is a small nodejs program/experiment that retrieves media conte
 3. Because my 2 little boys dominate the TV in my living room with Bubbleguppy reruns, and so my PC's the only place I can find solace at home, and not go crazy from cartoon sing-a-longs lulz :\
 
 ## Requirements
-[NodeJS](https://nodejs.org/)
-A games.json file generated from the [funnelope.downloader](https://github.com/Parallel-Platform/funnelope.downloader)
+* [NodeJS](https://nodejs.org/)
+* A games.json file generated from the [funnelope.downloader](https://github.com/Parallel-Platform/funnelope.downloader)
 
 ## Installation
 
