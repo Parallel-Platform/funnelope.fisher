@@ -1,5 +1,5 @@
 # funnelope.fisher
-It's a "funnel"...it's a "lope"...it's a funnelope! :P
+**It's a "funnel"...it's a "lope"...it's a funnelope! :P**
 
 funnelope.fisher is a small nodejs program/experiment that retrieves media content across various gaming sites and 'tries' to categorize them by video game, while building relevant content/search tags for them as well. Head on over to the [content/ign.json](https://github.com/Parallel-Platform/funnelope.fisher/blob/master/content/ign.json) file for an example of what a tagged content looks like
 
