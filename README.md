@@ -21,7 +21,7 @@ funnelope.fisher is a small nodejs program/experiment that retrieves media conte
 npm install
 ```
 
-* Pull down the [funnelope.downloader](https://github.com/Parallel-Platform/funnelope.downloader) repo, run it (**warning**, it takes a long time, as it downloads all video games for "every platform" and stores them to a JSON file) and copy over the games.json file over to this project's root directory
+* Pull down the [funnelope.downloader](https://github.com/Parallel-Platform/funnelope.downloader) repo, run it (~~**warning**, it takes a long time, as it downloads all video games for "every platform" and stores them to a JSON file~~ It will only pull games for the most current systems **except** for PC - where it will pull all PC games) and copy over the games.json file over to this project's root directory
 * (Or you could just use the current games.json files within the repo, but it is stale and will need to be updated)
 
 * For each "fisher" you are running (execept Twitch), make sure you have created the appropriate <fisher>.json file in the content folder.
